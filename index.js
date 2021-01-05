@@ -18,7 +18,6 @@ const client = new Twitter({
 cron.schedule('0 */5 * * * *', () => {
 	fs.readFile('./last_id', 'utf-8', (err, data) => {
 		if(err) throw err;
-		console.log(data);
 		client.get('search/tweets', {q: SEARCH_QUERY, count: 50, include_entities: true, since_id: data}, async (err, data, res) => {
 			if(err) throw err;
 			var last_id = 0n;
@@ -67,8 +66,6 @@ cron.schedule('0 */5 * * * *', () => {
 					if(err) throw err;
 				});
 			}
-			console.log(last_id);
-			console.log(BigInt(data.search_metadata.max_id_str));
 			if(last_id >= BigInt(data.search_metadata.max_id_str)) {
 				fs.writeFile('last_id', last_id, (err) => {
 					if(err) throw err;
